@@ -1,4 +1,5 @@
-
+let score = 0
+let combo = 1
 window.addEventListener('DOMContentLoaded', (event) => {
     let wasfalse = 1
     const gamepadAPI = {
@@ -973,7 +974,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.pops = []
             this.dead = 0
 
-            let floor = new Rectangle(x - 350, y + 50, 720, 10, "white")
+            let floor = new Rectangle(x - 350, y + 10, 720, 10, "white")
             this.platforms.push(floor)
 
 
@@ -1108,7 +1109,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         this.platforms[t].draw()
                         if (this.platforms[t].doesPerimeterTouch(this.legs[this.legs.length - 1].anchor)) {
                             if (!gamepadAPI.buttonsStatus.includes('B')) {
-                                this.leglock = 1
+                                // this.leglock = 1
                             } else {
                                 this.leglock = 0
                             }
@@ -1334,7 +1335,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     canvas_context.fillStyle = "white"
     let splat = 0
-    let gorpler = new Gorpler(350, 650)
+    let gorpler = new Gorpler(350, 690)
     let lava = new Rectangle(-10000, 710, 20000, 7200, "#FFF90095")
     let lava2 = new Rectangle(-10000, 720, 20000, 7200, "#FF110095")
     let paused = 1
@@ -1343,8 +1344,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let counter = 0
     function main() {
+        gamepadAPI.update()
+        if (paused == -1) {
+        } else {
+
         counter++
-        if(counter > 50){
+        if(counter > 100){
                 let from = {}
                 from.x = 350
                 from.y = -350
@@ -1356,9 +1361,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 hearts.push(heart)
                 counter = 0
         }
-        gamepadAPI.update()
-        if (paused == -1) {
-        } else {
             canvas_context.clearRect(-10000, -10000, canvas.width * 100, canvas.height * 100)  // refreshes the image
             canvas_context.fillStyle = "white"
             gorpler.draw()
@@ -1383,6 +1385,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             hearts[t].body.xmom*=-1
                             hearts[t].body.ymom*=-1
                             hearts[t].body.xmom += (Math.random()-.5)
+                            hearts[t].body.xmom += (Math.random()-.5)
+                            combo+=1
+                            score+=combo
                         }
                     }
                     if (    hearts[t].body.doesPerimeterTouch(gorpler.legs[gorpler.legs.length - 1].anchor)) {
@@ -1390,6 +1395,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
                             hearts[t].body.xmom*=-1
                             hearts[t].body.ymom*=-1
                             hearts[t].body.xmom += (Math.random()-.5)
+                            hearts[t].body.xmom += (Math.random()-.5)
+                            combo+=1
+                            score+=combo
                         }
                     }
 
@@ -1399,17 +1407,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         hearts[t].body.xmom*=-1
                         hearts[t].body.ymom*=-1
                         hearts[t].body.xmom += (Math.random()-.5)
+                        combo+=1
+                        score+=combo
                     }
                 }
 
             
-            if (    hearts[t].body.doesPerimeterTouch(gorpler.arms[k].anchor)) {
-                if(hearts[t].body.ymom > 0){
-                    hearts[t].body.xmom*=-1
-                    hearts[t].body.ymom*=-1
-                    hearts[t].body.xmom += (Math.random()-.5)
+                if (    hearts[t].body.doesPerimeterTouch(gorpler.arms[k].anchor)) {
+                    if(hearts[t].body.ymom > 0){
+                        hearts[t].body.xmom*=-1
+                        hearts[t].body.ymom*=-1
+                        hearts[t].body.xmom += (Math.random()-.5)
+                        hearts[t].body.xmom += (Math.random()-.5)
+                        combo+=1
+                        score+=combo
+                    }
                 }
-            }
+                if (    hearts[t].body.y > 720) {
+                }
+
+                }
+
+                for(let t=0;t<hearts.length;t++){
+
+                if (    hearts[t].body.y > 720) {
+                    hearts.splice(t,1)
+                    combo= 1
+                }
 
                 }
             // if (    hearts[t].body.doesPerimeterTouch(gorpler.arms2[gorpler.arms.length - 1].anchor)) {
@@ -1453,6 +1477,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             // if (lava2.isPointInside(gorpler.body)) {
             //     gorpler.death()
             // }
+
+            canvas_context.font = "20px arial"
+            canvas_context.fillStyle = "pink"
+            canvas_context.fillText(`Score: ${score}`, 20,30)
+            canvas_context.fillStyle = "gold"
+            canvas_context.fillText(`Combo: ${combo}`, 20,50)
         }
     }
 })
